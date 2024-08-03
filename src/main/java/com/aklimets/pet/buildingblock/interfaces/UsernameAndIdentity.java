@@ -1,4 +1,4 @@
-package com.aklimets.pet.model.interfaces;
+package com.aklimets.pet.buildingblock.interfaces;
 
 public interface UsernameAndIdentity {
 

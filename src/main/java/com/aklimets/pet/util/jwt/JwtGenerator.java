@@ -1,6 +1,6 @@
 package com.aklimets.pet.util.jwt;
 
-import com.aklimets.pet.model.interfaces.UsernameAndIdentity;
+import com.aklimets.pet.buildingblock.interfaces.UsernameAndIdentity;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
