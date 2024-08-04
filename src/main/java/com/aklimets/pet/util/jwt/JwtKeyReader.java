@@ -1,16 +1,19 @@
 package com.aklimets.pet.util.jwt;
 
+import com.google.common.io.Resources;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.springframework.stereotype.Component;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Objects;
 
 @Component
 public class JwtKeyReader {
@@ -33,8 +36,10 @@ public class JwtKeyReader {
         return kf.generatePublic(spec);
     }
 
-    private PemObject readPemFile(String filename) throws IOException {
-        try (var reader = new FileReader(filename); var pemReader = new PemReader(reader)) {
+    private PemObject readPemFile(String path) throws IOException {
+        try (var reader =
+                     new InputStreamReader(Objects.requireNonNull(JwtKeyReader.class.getClassLoader().getResourceAsStream(path)));
+             var pemReader = new PemReader(reader)) {
             return pemReader.readPemObject();
         }
     }
