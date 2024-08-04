@@ -2,7 +2,7 @@ package com.aklimets.pet.buildingblock.interfaces;
 
 public interface UsernameAndIdentity {
 
-    String getUsername();
+    DomainAttribute<String> getUsername();
 
-    String getId();
+    DomainAttribute<String> getId();
 }

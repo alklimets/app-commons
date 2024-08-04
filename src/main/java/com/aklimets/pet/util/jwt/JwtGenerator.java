@@ -1,6 +1,8 @@
 package com.aklimets.pet.util.jwt;
 
 import com.aklimets.pet.buildingblock.interfaces.UsernameAndIdentity;
+import com.aklimets.pet.model.security.AccessToken;
+import com.aklimets.pet.model.security.RefreshToken;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,18 +35,18 @@ public class JwtGenerator {
         this.refreshTokenPrivateKey = refreshPrivateKey;
     }
 
-    public String generateAccessToken(UsernameAndIdentity user) {
-        return generateToken(user, accessTokenPrivateKey, accessTokenTtl);
+    public AccessToken generateAccessToken(UsernameAndIdentity user) {
+        return new AccessToken(generateToken(user, accessTokenPrivateKey, accessTokenTtl));
     }
 
-    public String generateRefreshToken(UsernameAndIdentity user) {
-        return generateToken(user, refreshTokenPrivateKey, refreshTokenTtl);
+    public RefreshToken generateRefreshToken(UsernameAndIdentity user) {
+        return new RefreshToken(generateToken(user, refreshTokenPrivateKey, refreshTokenTtl));
     }
 
     private String generateToken(UsernameAndIdentity user, PrivateKey key, String ttl) {
         var claims = Jwts.claims()
-                .setSubject(user.getUsername())
-                .setId(user.getId())
+                .setSubject(user.getUsername().getValue())
+                .setId(user.getId().getValue())
                 .setExpiration(generateExpirationDate(ttl));
         return Jwts.builder()
                 .setClaims(claims)

@@ -1,6 +1,8 @@
 package com.aklimets.pet.util.jwt;
 
 import com.aklimets.pet.model.jwt.JwtUser;
+import com.aklimets.pet.model.security.AccessToken;
+import com.aklimets.pet.model.security.RefreshToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,13 +26,13 @@ public class JwtExtractor {
         this.refreshTokenPublicKey = refreshPublicKey;
     }
 
-    public JwtUser extractAccessJwtUser(String token) {
-        var claims = extractAccessClaims(token);
+    public JwtUser extractAccessJwtUser(AccessToken token) {
+        var claims = extractAccessClaims(token.getValue());
         return buildJwtUser(claims);
     }
 
-    public JwtUser extractRefreshJwtUser(String token) {
-        var claims = extractRefreshClaims(token);
+    public JwtUser extractRefreshJwtUser(RefreshToken token) {
+        var claims = extractRefreshClaims(token.getValue());
         return buildJwtUser(claims);
     }
 
@@ -38,10 +40,10 @@ public class JwtExtractor {
         var id = extractClaim(claims, Claims::getId);
         var username = extractClaim(claims, Claims::getSubject);
         var expiration = extractClaim(claims, Claims::getExpiration);
-        return new JwtUser(id, username, expiration);
+        return new JwtUser(() -> id, () -> username, () -> expiration);
     }
-    
-    private   <T> T extractClaim(Claims claims, Function<Claims, T> extract) {
+
+    private <T> T extractClaim(Claims claims, Function<Claims, T> extract) {
         return extract.apply(claims);
     }
 
