@@ -1,6 +1,8 @@
 package com.aklimets.pet.buildingblock.interfaces;
 
-public interface UsernameAndIdentity {
+import java.io.Serializable;
+
+public interface UsernameAndIdentity extends Serializable {
 
     DomainAttribute<String> getUsername();
 

@@ -1,8 +1,8 @@
 package com.aklimets.pet.util.jwt;
 
 import com.aklimets.pet.model.jwt.JwtUser;
-import com.aklimets.pet.model.security.AccessToken;
-import com.aklimets.pet.model.security.RefreshToken;
+import com.aklimets.pet.model.attribute.AccessToken;
+import com.aklimets.pet.model.attribute.RefreshToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;

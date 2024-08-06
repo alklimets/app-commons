@@ -1,4 +1,4 @@
-package com.aklimets.pet.model.security;
+package com.aklimets.pet.model.attribute;
 
 import com.aklimets.pet.buildingblock.interfaces.DomainAttribute;
 import lombok.AllArgsConstructor;
