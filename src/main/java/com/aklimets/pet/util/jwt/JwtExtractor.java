@@ -6,12 +6,14 @@ import com.aklimets.pet.model.attribute.RefreshToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.security.PublicKey;
 import java.util.function.Function;
 
 @Component
+@Profile("jwt")
 public class JwtExtractor {
 
     private final PublicKey accessTokenPublicKey;
