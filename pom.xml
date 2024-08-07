@@ -7,6 +7,12 @@
     <groupId>com.aklimets.pet</groupId>
     <artifactId>app-commons</artifactId>
     <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>jwt</module>
+        <module>model</module>
+        <module>util</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

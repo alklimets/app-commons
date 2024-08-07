@@ -1,4 +1,4 @@
-package com.aklimets.pet.model.jwt;
+package com.aklimets.pet.jwt.model;
 
 import com.aklimets.pet.buildingblock.interfaces.DomainAttribute;
 

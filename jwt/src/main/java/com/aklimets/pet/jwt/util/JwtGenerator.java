@@ -1,4 +1,4 @@
-package com.aklimets.pet.util.jwt;
+package com.aklimets.pet.jwt.util;
 
 import com.aklimets.pet.buildingblock.interfaces.UsernameAndIdentity;
 import com.aklimets.pet.model.attribute.AccessToken;
@@ -6,7 +6,6 @@ import com.aklimets.pet.model.attribute.RefreshToken;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.security.PrivateKey;
@@ -16,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 import static java.lang.Integer.parseInt;
 
 @Component
-@Profile("jwt")
 public class JwtGenerator {
     private final PrivateKey accessTokenPrivateKey;
     private final PrivateKey refreshTokenPrivateKey;
