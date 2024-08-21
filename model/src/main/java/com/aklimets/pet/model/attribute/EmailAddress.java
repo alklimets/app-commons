@@ -12,8 +12,8 @@ import javax.validation.constraints.NotNull;
 @Embeddable
 @Getter
 @AllArgsConstructor
-@EqualsAndHashCode
-public class EmailAddress implements DomainAttribute<String> {
+@EqualsAndHashCode(callSuper = true)
+public class EmailAddress extends DomainAttribute<String> {
 
     @NotNull
     @Email

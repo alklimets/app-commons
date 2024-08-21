@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @AllArgsConstructor
-@EqualsAndHashCode
-public class AccessToken implements DomainAttribute<String> {
+@EqualsAndHashCode(callSuper = true)
+public class AccessToken extends DomainAttribute<String> {
 
     @NotNull
     @Min(value = 3, message = "Password should be min 3 characters long")

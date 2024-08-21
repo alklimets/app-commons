@@ -13,8 +13,8 @@ import javax.validation.constraints.NotNull;
 @Embeddable
 @Getter
 @AllArgsConstructor
-@EqualsAndHashCode
-public class RefreshToken implements DomainAttribute<String> {
+@EqualsAndHashCode(callSuper = true)
+public class RefreshToken extends DomainAttribute<String> {
 
     @NotNull
     @Min(value = 3, message = "Password should be min 3 characters long")

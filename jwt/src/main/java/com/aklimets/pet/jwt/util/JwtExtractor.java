@@ -1,5 +1,6 @@
 package com.aklimets.pet.jwt.util;
 
+import com.aklimets.pet.buildingblock.interfaces.DomainAttribute;
 import com.aklimets.pet.jwt.model.JwtUser;
 import com.aklimets.pet.model.attribute.AccessToken;
 import com.aklimets.pet.model.attribute.RefreshToken;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.PublicKey;
+import java.util.Date;
 import java.util.function.Function;
 
 @Component
@@ -42,7 +44,22 @@ public class JwtExtractor {
         var username = extractClaim(claims, Claims::getSubject);
         var expiration = extractClaim(claims, Claims::getExpiration);
         var role = Role.valueOf((String) claims.get("role"));
-        return new JwtUser(() -> id, () -> username, () -> expiration, role);
+        return new JwtUser(new DomainAttribute<>() {
+            @Override
+            public String getValue() {
+                return id;
+            }
+        }, new DomainAttribute<>() {
+            @Override
+            public String getValue() {
+                return username;
+            }
+        }, new DomainAttribute<>() {
+            @Override
+            public Date getValue() {
+                return expiration;
+            }
+        }, role);
     }
 
     private <T> T extractClaim(Claims claims, Function<Claims, T> extract) {

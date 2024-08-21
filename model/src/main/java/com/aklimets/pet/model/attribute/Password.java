@@ -12,8 +12,8 @@ import javax.validation.constraints.Size;
 @Embeddable
 @Getter
 @AllArgsConstructor
-@EqualsAndHashCode
-public class Password implements DomainAttribute<String> {
+@EqualsAndHashCode(callSuper = true)
+public class Password extends DomainAttribute<String> {
 
     @NotNull
     @Size(min = 3, max = 25, message = "Password length should be between 3 and 25 symbols")
