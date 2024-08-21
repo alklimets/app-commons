@@ -1,6 +1,6 @@
 package com.aklimets.pet.jwt.util;
 
-import com.aklimets.pet.buildingblock.interfaces.UsernameAndIdentity;
+import com.aklimets.pet.buildingblock.interfaces.JwtClaims;
 import com.aklimets.pet.model.attribute.AccessToken;
 import com.aklimets.pet.model.attribute.RefreshToken;
 import io.jsonwebtoken.Jwts;
@@ -37,19 +37,20 @@ public class JwtGenerator {
         this.refreshTokenPrivateKey = refreshPrivateKey;
     }
 
-    public AccessToken generateAccessToken(UsernameAndIdentity user) {
+    public AccessToken generateAccessToken(JwtClaims user) {
         return new AccessToken(generateToken(user, accessTokenPrivateKey, accessTokenTtl));
     }
 
-    public RefreshToken generateRefreshToken(UsernameAndIdentity user) {
+    public RefreshToken generateRefreshToken(JwtClaims user) {
         return new RefreshToken(generateToken(user, refreshTokenPrivateKey, refreshTokenTtl));
     }
 
-    private String generateToken(UsernameAndIdentity user, PrivateKey key, String ttl) {
+    private String generateToken(JwtClaims user, PrivateKey key, String ttl) {
         var claims = Jwts.claims()
                 .setSubject(user.getUsername().getValue())
                 .setId(user.getId().getValue())
                 .setExpiration(generateExpirationDate(ttl));
+        claims.put("role", user.getRole());
         return Jwts.builder()
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.RS256, key)

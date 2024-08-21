@@ -3,6 +3,7 @@ package com.aklimets.pet.jwt.util;
 import com.aklimets.pet.jwt.model.JwtUser;
 import com.aklimets.pet.model.attribute.AccessToken;
 import com.aklimets.pet.model.attribute.RefreshToken;
+import com.aklimets.pet.model.attribute.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +41,8 @@ public class JwtExtractor {
         var id = extractClaim(claims, Claims::getId);
         var username = extractClaim(claims, Claims::getSubject);
         var expiration = extractClaim(claims, Claims::getExpiration);
-        return new JwtUser(() -> id, () -> username, () -> expiration);
+        var role = Role.valueOf((String) claims.get("role"));
+        return new JwtUser(() -> id, () -> username, () -> expiration, role);
     }
 
     private <T> T extractClaim(Claims claims, Function<Claims, T> extract) {
