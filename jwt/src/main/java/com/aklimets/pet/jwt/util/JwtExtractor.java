@@ -2,26 +2,22 @@ package com.aklimets.pet.jwt.util;
 
 import com.aklimets.pet.buildingblock.interfaces.DomainAttribute;
 import com.aklimets.pet.jwt.model.JwtUser;
-import com.aklimets.pet.model.attribute.AccessToken;
-import com.aklimets.pet.model.attribute.RefreshToken;
-import com.aklimets.pet.model.attribute.Role;
+import com.aklimets.pet.jwt.model.attribute.AccessToken;
+import com.aklimets.pet.jwt.model.attribute.RefreshToken;
+import com.aklimets.pet.jwt.model.attribute.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.security.PublicKey;
-import java.util.Date;
 import java.util.function.Function;
 
-@Component
 public class JwtExtractor {
 
     private final PublicKey accessTokenPublicKey;
     private final PublicKey refreshTokenPublicKey;
 
-    public JwtExtractor(@Value("${jwt.access.public.key.path}") String accessPublicKeyPath,
-                        @Value("${jwt.refresh.public.key.path}") String refreshPublicKeyPath,
+    public JwtExtractor(String accessPublicKeyPath,
+                        String refreshPublicKeyPath,
                         JwtKeyReader jwtKeyReader) throws Exception {
         var accessPublicKey = jwtKeyReader.getPublicKey(accessPublicKeyPath);
         var refreshPublicKey = jwtKeyReader.getPublicKey(refreshPublicKeyPath);
@@ -44,22 +40,16 @@ public class JwtExtractor {
         var username = extractClaim(claims, Claims::getSubject);
         var expiration = extractClaim(claims, Claims::getExpiration);
         var role = Role.valueOf((String) claims.get("role"));
-        return new JwtUser(new DomainAttribute<>() {
+        return new JwtUser(wrap(id), wrap(username), wrap(expiration), role);
+    }
+
+    private <T> DomainAttribute<T> wrap(T value) {
+        return new DomainAttribute<>() {
             @Override
-            public String getValue() {
-                return id;
+            public T getValue() {
+                return value;
             }
-        }, new DomainAttribute<>() {
-            @Override
-            public String getValue() {
-                return username;
-            }
-        }, new DomainAttribute<>() {
-            @Override
-            public Date getValue() {
-                return expiration;
-            }
-        }, role);
+        };
     }
 
     private <T> T extractClaim(Claims claims, Function<Claims, T> extract) {

@@ -1,4 +1,4 @@
-package com.aklimets.pet.buildingblock.interfaces;
+package com.aklimets.pet.event;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package com.aklimets.pet.buildingblock.anotations;
+package com.aklimets.pet.swagger.annotation;
 
 import com.aklimets.pet.model.envelope.ErrorResponseEnvelope;
 import com.aklimets.pet.model.envelope.ValidationEnvelope;

@@ -1,6 +1,7 @@
-package com.aklimets.pet.buildingblock.interfaces;
+package com.aklimets.pet.jwt.model;
 
-import com.aklimets.pet.model.attribute.Role;
+import com.aklimets.pet.buildingblock.interfaces.DomainAttribute;
+import com.aklimets.pet.jwt.model.attribute.Role;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package com.aklimets.pet.model.attribute;
+package com.aklimets.pet.jwt.model.attribute;
 
 import com.aklimets.pet.buildingblock.interfaces.DomainAttribute;
 import lombok.AllArgsConstructor;
