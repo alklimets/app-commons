@@ -3,5 +3,5 @@ package com.aklimets.pet.event;
 
 public interface DomainEventAdapter {
 
-    void send(DomainEvent event);
+    void send(DomainEvent event, String eventType);
 }
