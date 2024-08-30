@@ -1,7 +1,7 @@
 package com.aklimets.pet.model.envelope;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "ErrorResponseEnvelope", description = "Error response envelope")
+@Schema(name = "ErrorResponseEnvelope", description = "Error response envelope")
 public record ErrorResponseEnvelope(String errorCode, String errorMessage) {
 }

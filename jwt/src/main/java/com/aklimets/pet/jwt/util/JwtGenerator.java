@@ -4,7 +4,6 @@ import com.aklimets.pet.jwt.model.JwtClaims;
 import com.aklimets.pet.jwt.model.attribute.AccessToken;
 import com.aklimets.pet.jwt.model.attribute.RefreshToken;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.security.PrivateKey;
 import java.util.Date;
@@ -41,14 +40,12 @@ public class JwtGenerator {
     }
 
     private String generateToken(JwtClaims user, PrivateKey key, String ttl) {
-        var claims = Jwts.claims()
-                .setSubject(user.getUsername().getValue())
-                .setId(user.getId().getValue())
-                .setExpiration(generateExpirationDate(ttl));
-        claims.put("role", user.getRole());
         return Jwts.builder()
-                .setClaims(claims)
-                .signWith(SignatureAlgorithm.RS256, key)
+                .subject(user.getUsername().getValue())
+                .id(user.getId().getValue())
+                .expiration(generateExpirationDate(ttl))
+                .claim("role", user.getRole())
+                .signWith(key)
                 .compact();
     }
 

@@ -65,6 +65,7 @@ public class JwtExtractor {
     }
 
     private Claims extractTokenClaims(String token, PublicKey publicKey) {
-        return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token).getBody();
+//        return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token).getBody();
+        return Jwts.parser().verifyWith(publicKey).build().parseSignedClaims(token).getPayload();
     }
 }

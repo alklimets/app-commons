@@ -1,9 +1,9 @@
 package com.aklimets.pet.model.envelope;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
-@ApiModel(value = "ValidationEnvelope", description = "Validation response envelope")
+@Schema(name = "ValidationEnvelope", description = "Validation response envelope")
 public record ValidationEnvelope(String code, List<String> validationFails) {
 }
