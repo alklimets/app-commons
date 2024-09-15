@@ -28,7 +28,7 @@ public class JwtKeyReader {
         var pemObject = readPemFile(publicKeyPath);
         var content = pemObject.getContent();
         var spec = new X509EncodedKeySpec(content);
-        var kf = KeyFactory.getInstance("RSA");
+        var kf = KeyFactory.getInstance(ALGORITHM);
         return kf.generatePublic(spec);
     }
 

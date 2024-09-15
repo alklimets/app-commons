@@ -15,6 +15,7 @@
         <module>api-docs</module>
         <module>building-block</module>
         <module>event</module>
+        <module>cryptography</module>
     </modules>
 
     <properties>
