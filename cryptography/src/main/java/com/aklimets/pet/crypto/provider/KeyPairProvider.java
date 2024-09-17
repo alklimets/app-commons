@@ -8,5 +8,4 @@ public interface KeyPairProvider {
     PublicKey getPublicKey();
 
     PrivateKey getPrivateKey();
-
 }

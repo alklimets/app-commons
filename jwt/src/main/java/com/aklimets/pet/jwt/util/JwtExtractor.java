@@ -5,7 +5,7 @@ import com.aklimets.pet.jwt.model.JwtUser;
 import com.aklimets.pet.jwt.model.attribute.AccessToken;
 import com.aklimets.pet.jwt.model.attribute.RefreshToken;
 import com.aklimets.pet.jwt.model.attribute.Role;
-import com.aklimets.pet.crypto.provider.KeyPairProvider;
+import com.aklimets.pet.crypto.provider.VersionedKeyPairProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
@@ -14,13 +14,13 @@ import java.util.function.Function;
 
 public class JwtExtractor {
 
-    private final KeyPairProvider accessKeyPairProvider;
+    private final VersionedKeyPairProvider accessKeyPairProvider;
 
-    private final KeyPairProvider rerfreshKeyPairProvider;
+    private final VersionedKeyPairProvider refreshKeyPairProvider;
 
-    public JwtExtractor(KeyPairProvider accessKeyPairProvider, KeyPairProvider rerfreshKeyPairProvider) {
+    public JwtExtractor(VersionedKeyPairProvider accessKeyPairProvider, VersionedKeyPairProvider refreshKeyPairProvider) {
         this.accessKeyPairProvider = accessKeyPairProvider;
-        this.rerfreshKeyPairProvider = rerfreshKeyPairProvider;
+        this.refreshKeyPairProvider = refreshKeyPairProvider;
     }
 
     public JwtUser extractAccessJwtUser(AccessToken token) {
@@ -59,7 +59,7 @@ public class JwtExtractor {
     }
 
     private Claims extractRefreshClaims(String token) {
-        return extractTokenClaims(token, rerfreshKeyPairProvider.getPublicKey());
+        return extractTokenClaims(token, refreshKeyPairProvider.getPublicKey());
     }
 
     private Claims extractTokenClaims(String token, PublicKey publicKey) {
