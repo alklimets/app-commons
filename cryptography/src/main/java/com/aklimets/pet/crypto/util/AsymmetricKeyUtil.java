@@ -2,14 +2,21 @@ package com.aklimets.pet.crypto.util;
 
 import com.aklimets.pet.crypto.model.AsymmetricAlgorithm;
 import com.aklimets.pet.crypto.model.dto.EncodedKeyPair;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemReader;
 
 import javax.crypto.Cipher;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.Objects;
 
 import static com.aklimets.pet.crypto.model.AsymmetricAlgorithm.RSA;
+import static javax.crypto.Cipher.DECRYPT_MODE;
+import static javax.crypto.Cipher.ENCRYPT_MODE;
 
 public class AsymmetricKeyUtil {
 
@@ -35,14 +42,22 @@ public class AsymmetricKeyUtil {
 
     public PublicKey getPublicKeyInstance(String encodedKey, AsymmetricAlgorithm algorithm) throws Exception {
         byte[] content = Base64.getDecoder().decode(encodedKey);
-        var spec = new X509EncodedKeySpec(content);
-        var kf = KeyFactory.getInstance(algorithm.getAlgorithm());
-        return kf.generatePublic(spec);
+        return getPublicKeyInstance(content, algorithm);
     }
 
     public PrivateKey getPrivateKeyInstance(String encodedKey, AsymmetricAlgorithm algorithm) throws Exception {
         byte[] content = Base64.getDecoder().decode(encodedKey);
-        var spec = new PKCS8EncodedKeySpec(content);
+        return getPrivateKeyInstance(content, algorithm);
+    }
+
+    public PublicKey getPublicKeyInstance(byte[] keyContentBytes, AsymmetricAlgorithm algorithm) throws Exception {
+        var spec = new X509EncodedKeySpec(keyContentBytes);
+        var kf = KeyFactory.getInstance(algorithm.getAlgorithm());
+        return kf.generatePublic(spec);
+    }
+
+    public PrivateKey getPrivateKeyInstance(byte[] keyContentBytes, AsymmetricAlgorithm algorithm) throws Exception {
+        var spec = new PKCS8EncodedKeySpec(keyContentBytes);
         var kf = KeyFactory.getInstance(algorithm.getAlgorithm());
         return kf.generatePrivate(spec);
     }
@@ -54,7 +69,7 @@ public class AsymmetricKeyUtil {
         PublicKey publicKey = getPublicKeyInstance(base64PublicKey, RSA);
 
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        cipher.init(ENCRYPT_MODE, publicKey);
 
         byte[] encryptedData = cipher.doFinal(dataToEncrypt.getBytes());
 
@@ -69,13 +84,22 @@ public class AsymmetricKeyUtil {
         PrivateKey privateKey = getPrivateKeyInstance(base64PrivateKey, RSA);
 
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        cipher.init(DECRYPT_MODE, privateKey);
 
         byte[] encryptedData = Base64.getDecoder().decode(dataToDecrypt);
 
         // Decrypt the data
         byte[] decryptedData = cipher.doFinal(encryptedData);
         return new String(decryptedData);
+    }
+
+
+    public PemObject readPemFile(String path) throws IOException {
+        try (var reader =
+                     new InputStreamReader(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(path)));
+             var pemReader = new PemReader(reader)) {
+            return pemReader.readPemObject();
+        }
     }
 
 }

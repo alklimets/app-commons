@@ -3,6 +3,7 @@ package com.aklimets.pet.jwt.util;
 import com.aklimets.pet.jwt.model.JwtClaims;
 import com.aklimets.pet.jwt.model.attribute.AccessToken;
 import com.aklimets.pet.jwt.model.attribute.RefreshToken;
+import com.aklimets.pet.crypto.provider.KeyPairProvider;
 import io.jsonwebtoken.Jwts;
 
 import java.security.PrivateKey;
@@ -12,31 +13,24 @@ import java.util.concurrent.TimeUnit;
 import static java.lang.Integer.parseInt;
 
 public class JwtGenerator {
-    private final PrivateKey accessTokenPrivateKey;
-    private final PrivateKey refreshTokenPrivateKey;
+    private final KeyPairProvider accessKeyPairProvider;
+    private final KeyPairProvider refreshKeyPairProvider;
     private final String accessTokenTtl;
     private final String refreshTokenTtl;
 
-    public JwtGenerator(String accessTokenTtl,
-                        String refreshTokenTtl,
-                        String accessPrivateKeyPath,
-                        String refreshPrivateKeyPath,
-                        JwtKeyReader jwtKeyReader) throws Exception {
+    public JwtGenerator(KeyPairProvider accessKeyPairProvider, KeyPairProvider refreshKeyPairProvider, String accessTokenTtl, String refreshTokenTtl) {
+        this.accessKeyPairProvider = accessKeyPairProvider;
+        this.refreshKeyPairProvider = refreshKeyPairProvider;
         this.accessTokenTtl = accessTokenTtl;
         this.refreshTokenTtl = refreshTokenTtl;
-
-        var accessPrivateKey = jwtKeyReader.getPrivateKey(accessPrivateKeyPath);
-        var refreshPrivateKey = jwtKeyReader.getPrivateKey(refreshPrivateKeyPath);
-        this.accessTokenPrivateKey = accessPrivateKey;
-        this.refreshTokenPrivateKey = refreshPrivateKey;
     }
 
     public AccessToken generateAccessToken(JwtClaims user) {
-        return new AccessToken(generateToken(user, accessTokenPrivateKey, accessTokenTtl));
+        return new AccessToken(generateToken(user, accessKeyPairProvider.getPrivateKey(), accessTokenTtl));
     }
 
     public RefreshToken generateRefreshToken(JwtClaims user) {
-        return new RefreshToken(generateToken(user, refreshTokenPrivateKey, refreshTokenTtl));
+        return new RefreshToken(generateToken(user, refreshKeyPairProvider.getPrivateKey(), refreshTokenTtl));
     }
 
     private String generateToken(JwtClaims user, PrivateKey key, String ttl) {

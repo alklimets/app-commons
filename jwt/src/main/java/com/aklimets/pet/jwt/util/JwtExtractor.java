@@ -5,6 +5,7 @@ import com.aklimets.pet.jwt.model.JwtUser;
 import com.aklimets.pet.jwt.model.attribute.AccessToken;
 import com.aklimets.pet.jwt.model.attribute.RefreshToken;
 import com.aklimets.pet.jwt.model.attribute.Role;
+import com.aklimets.pet.crypto.provider.KeyPairProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
@@ -13,16 +14,13 @@ import java.util.function.Function;
 
 public class JwtExtractor {
 
-    private final PublicKey accessTokenPublicKey;
-    private final PublicKey refreshTokenPublicKey;
+    private final KeyPairProvider accessKeyPairProvider;
 
-    public JwtExtractor(String accessPublicKeyPath,
-                        String refreshPublicKeyPath,
-                        JwtKeyReader jwtKeyReader) throws Exception {
-        var accessPublicKey = jwtKeyReader.getPublicKey(accessPublicKeyPath);
-        var refreshPublicKey = jwtKeyReader.getPublicKey(refreshPublicKeyPath);
-        this.accessTokenPublicKey = accessPublicKey;
-        this.refreshTokenPublicKey = refreshPublicKey;
+    private final KeyPairProvider rerfreshKeyPairProvider;
+
+    public JwtExtractor(KeyPairProvider accessKeyPairProvider, KeyPairProvider rerfreshKeyPairProvider) {
+        this.accessKeyPairProvider = accessKeyPairProvider;
+        this.rerfreshKeyPairProvider = rerfreshKeyPairProvider;
     }
 
     public JwtUser extractAccessJwtUser(AccessToken token) {
@@ -57,15 +55,14 @@ public class JwtExtractor {
     }
 
     private Claims extractAccessClaims(String token) {
-        return extractTokenClaims(token, accessTokenPublicKey);
+        return extractTokenClaims(token, accessKeyPairProvider.getPublicKey());
     }
 
     private Claims extractRefreshClaims(String token) {
-        return extractTokenClaims(token, refreshTokenPublicKey);
+        return extractTokenClaims(token, rerfreshKeyPairProvider.getPublicKey());
     }
 
     private Claims extractTokenClaims(String token, PublicKey publicKey) {
-//        return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token).getBody();
         return Jwts.parser().verifyWith(publicKey).build().parseSignedClaims(token).getPayload();
     }
 }
